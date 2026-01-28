@@ -103,12 +103,6 @@ func (t *Tool) Ma(source []float64, length int) []float64 {
 	return result
 }
 
-// Ema calculates Exponential Moving Average
-func (t *Tool) Ema(source []float64, length int) []float64 {
-	alpha := 2.0 / float64(length+1)
-	return t.expMovingAvg(source, alpha)
-}
-
 // Rma calculates Running Moving Average (Wilder's smoothing)
 func (t *Tool) Rma(source []float64, length int) []float64 {
 	alpha := 1.0 / float64(length)
