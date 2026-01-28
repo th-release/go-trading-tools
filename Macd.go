@@ -1,5 +1,11 @@
 package tradingtools
 
+type MacdResult struct {
+	Macd      []float64
+	Signal    []float64
+	Histogram []float64
+}
+
 // Macd calculates the Moving Average Convergence Divergence
 func (t *Tool) Macd(source []float64, fastLength, slowLength, signalLength int) MacdResult {
 	n := len(source)
