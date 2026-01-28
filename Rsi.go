@@ -1,6 +1,9 @@
 package tradingtools
 
+import "math"
+
 // Rsi calculates Relative Strength Index
+// PineScript: ta.rsi(source, length)
 func (t *Tool) Rsi(source []float64, length int) []float64 {
 	n := len(source)
 	gains := makeSlice(n)
@@ -20,7 +23,10 @@ func (t *Tool) Rsi(source []float64, length int) []float64 {
 
 	result := makeSlice(n)
 	for i := 0; i < n; i++ {
-		if avgLoss[i] == 0 {
+		// If avgGain or avgLoss is NaN, RSI is also NaN
+		if math.IsNaN(avgGain[i]) || math.IsNaN(avgLoss[i]) {
+			result[i] = math.NaN()
+		} else if avgLoss[i] == 0 {
 			result[i] = 100
 		} else {
 			rs := avgGain[i] / avgLoss[i]

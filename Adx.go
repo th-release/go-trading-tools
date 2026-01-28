@@ -37,6 +37,12 @@ func (t *Tool) Adx(high, low, close []float64, length int) AdxResult {
 	dx := makeSlice(n)
 
 	for i := 0; i < n; i++ {
+		if math.IsNaN(smoothedTr[i]) {
+			plusDi[i] = math.NaN()
+			minusDi[i] = math.NaN()
+			dx[i] = math.NaN()
+			continue
+		}
 		plusDi[i] = safeDiv(100*smoothedPlusDm[i], smoothedTr[i], 0)
 		minusDi[i] = safeDiv(100*smoothedMinusDm[i], smoothedTr[i], 0)
 		diSum := plusDi[i] + minusDi[i]
