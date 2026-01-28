@@ -77,11 +77,6 @@ func safeDiv(a, b, fallback float64) float64 {
 // Volatility Indicators
 // ============================================================================
 
-// Atr calculates Average True Range
-func (t *Tool) Atr(high, low, close []float64, length int) []float64 {
-	return t.Rma(t.Tr(high, low, close), length)
-}
-
 // Stdev calculates the standard deviation over a rolling window
 func (t *Tool) Stdev(source []float64, length int) []float64 {
 	n := len(source)
