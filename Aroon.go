@@ -6,6 +6,9 @@ type AroonResult struct {
 }
 
 // Aroon calculates the Aroon indicator
+// PineScript: ta.aroon(high, low, length)
+// Aroon Up = 100 * (length - bars since highest high) / length
+// Aroon Down = 100 * (length - bars since lowest low) / length
 func (t *Tool) Aroon(high, low []float64, length int) AroonResult {
 	n := len(high)
 	up := makeSlice(n)
@@ -17,23 +20,23 @@ func (t *Tool) Aroon(high, low []float64, length int) AroonResult {
 			continue
 		}
 
-		highestIdx, lowestIdx := 0, 0
-		highestVal, lowestVal := high[i-length], low[i-length]
+		barsSinceHigh, barsSinceLow := 0, 0
+		highestVal, lowestVal := high[i], low[i]
 
 		for j := 0; j <= length; j++ {
-			idx := i - length + j
+			idx := i - j
 			if high[idx] >= highestVal {
 				highestVal = high[idx]
-				highestIdx = j
+				barsSinceHigh = j
 			}
 			if low[idx] <= lowestVal {
 				lowestVal = low[idx]
-				lowestIdx = j
+				barsSinceLow = j
 			}
 		}
 
-		up[i] = 100 * float64(highestIdx) / lengthF
-		down[i] = 100 * float64(lowestIdx) / lengthF
+		up[i] = 100 * (lengthF - float64(barsSinceHigh)) / lengthF
+		down[i] = 100 * (lengthF - float64(barsSinceLow)) / lengthF
 	}
 
 	return AroonResult{Up: up, Down: down}

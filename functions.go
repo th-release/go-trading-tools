@@ -18,14 +18,19 @@ func makeIntSlice(n int) []int {
 	return make([]int, n)
 }
 
-// expMovingAvg calculates exponential moving average with given alpha
-func (t *Tool) expMovingAvg(source []float64, alpha float64) []float64 {
+// expMovingAvg calculates exponential moving average with given alpha and length
+// PineScript initializes the first `length` bars using SMA
+func (t *Tool) expMovingAvg(source []float64, alpha float64, length int) []float64 {
 	n := len(source)
 	result := makeSlice(n)
 
 	for i := 0; i < n; i++ {
-		if i == 0 {
-			result[i] = source[i]
+		if i < length-1 {
+			// Not enough data yet, use cumulative average
+			result[i] = sumWindow(source, i, i+1) / float64(i+1)
+		} else if i == length-1 {
+			// First valid bar: use SMA as initial value
+			result[i] = sumWindow(source, i, length) / float64(length)
 		} else {
 			result[i] = alpha*source[i] + (1-alpha)*result[i-1]
 		}
